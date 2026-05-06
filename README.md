@@ -1,5 +1,6 @@
 ## Try it yourself
 Either download this repo and click on the html or go here: https://pabloarbelo.com/content/JSexperiments/wakatime-wrapped/index.html
+
 Star this repo to remember it! Contribute if you want, use it for whatever you like, MIT license
 
 ## Example wrapped
