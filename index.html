@@ -1,0 +1,196 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0a0a0a">
+  <title>WakaTime Wrapped</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="header-fixed">
+    <div class="logo">📊</div>
+    <h1>WakaTime Wrapped</h1>
+  </div>
+
+  <div class="container">
+    <!-- TOKEN INPUT SCREEN -->
+    <div id="token-screen" class="form-container">
+      <div class="form-inner">
+        <div class="form-title-section">
+          <h1 class="form-title">WakaTime Wrapped</h1>
+        </div>
+        <p>Your coding journey, visualized</p>
+
+        <form id="token-form">
+          <!-- STEP 1: FILE UPLOAD -->
+          <div class="form-group">
+            <label for="json-upload">📥 Select Your Data File</label>
+            <p class="file-description">Export your WakaTime stats as JSON from your <a href="https://wakatime.com/settings/account" target="_blank">WakaTime Settings</a>(Export my code stats → Daily totals)</p>
+            <input
+              type="file"
+              id="json-upload"
+              accept=".json"
+              style="display: none;"
+            />
+            <button type="button" id="file-browse-btn" class="button button-secondary" style="width: 100%;">
+              Choose File
+            </button>
+            <span id="file-name" class="file-name"></span>
+          </div>
+
+          <!-- STEP 2: YEAR SELECTION (hidden until file loaded) -->
+          <div class="form-group" id="year-selector-group" style="display: none;">
+            <label>📅 Select Year</label>
+            <div id="year-selector" class="year-grid"></div>
+          </div>
+
+          <div id="error-message" class="error-message"></div>
+
+          <button type="submit" class="button button-primary" id="generate-btn" style="width: 100%; font-size: 1.1rem;" disabled>
+            ✨ Generate Wrapped
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- WRAPPED DISPLAY SCREEN -->
+    <div id="wrapped-screen" class="hidden">
+
+      <div class="loading-overlay hidden" id="loading-overlay">
+        <div class="loading-dots">
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+        <p>Generating Your Wrapped...</p>
+      </div>
+
+      <!-- SLIDES CONTAINER -->
+      <div class="slides-container" id="slides-container">
+        <!-- Slide 0: Intro -->
+        <div class="slide slide-intro" id="slide-0">
+          <div class="slide-content">
+            <h1 class="slide-title" style="font-size: 3.5rem; margin-top: 120px;">Your</h1>
+            <h1 class="slide-title" style="font-size: 3.5rem; animation-delay: 0.2s;">2024</h1>
+            <h1 class="slide-title" style="font-size: 3.5rem; animation-delay: 0.4s;">Wrapped</h1>
+            <p class="slide-subtitle" style="animation-delay: 0.6s;">Let's see what you created</p>
+          </div>
+        </div>
+
+        <!-- Slide 1: First Day Coded -->
+        <div class="slide slide-stat" id="slide-1">
+          <div class="slide-content">
+            <p class="stat-label">It All Started</p>
+            <h2 class="stat-value stat-date" id="stat-first-day"></h2>
+            <p class="stat-unit">your first day of coding</p>
+            <p class="stat-subtitle" id="stat-days-since">The beginning of your journey</p>
+          </div>
+        </div>
+
+        <!-- Slide 2: Total Hours -->
+        <div class="slide slide-stat slide-heatmap" id="slide-2">
+          <div class="slide-content">
+            <p class="stat-label">Total Hours Coded</p>
+            <h2 class="stat-value" id="stat-hours">0</h2>
+            <p class="stat-unit" id="stat-hours-unit">hours of focused time</p>
+            <p class="stat-subtitle" id="stat-days-coded">Across 365 days</p>
+            <div class="heatmap-container" id="heatmap-container"></div>
+          </div>
+        </div>
+
+        <!-- Slide 3: Top Languages -->
+        <div class="slide slide-languages" id="slide-3">
+          <div class="slide-content">
+            <h3 class="slide-section-title">Your Languages</h3>
+            <div class="language-list" id="language-list"></div>
+          </div>
+        </div>
+
+        <!-- Slide 4: Top Project Carousel -->
+        <div class="slide slide-project" id="slide-4">
+          <div class="slide-content">
+            <h3 class="slide-section-title">Your Main Focus</h3>
+            <div class="carousel-container" id="carousel-container">
+              <div class="carousel-card-track" id="carousel-card-track"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 5: Best Day -->
+        <div class="slide slide-stat" id="slide-5">
+          <div class="slide-content">
+            <p class="stat-label">Best Day</p>
+            <h2 class="stat-value" id="stat-best-day">0</h2>
+            <p class="stat-unit">hours in one day</p>
+            <p class="stat-subtitle" id="stat-best-day-date">That's dedication!</p>
+          </div>
+        </div>
+
+        <!-- Slide 6: IDE of Choice -->
+        <div class="slide slide-editors" id="slide-6">
+          <div class="slide-content">
+            <h3 class="slide-section-title">Your IDE of Choice</h3>
+            <div class="editor-list" id="editor-list"></div>
+          </div>
+        </div>
+
+        <!-- Slide 7: Dev OS -->
+        <div class="slide slide-os" id="slide-7">
+          <div class="slide-content">
+            <h3 class="slide-section-title">Your Dev OS</h3>
+            <div class="os-list" id="os-list"></div>
+          </div>
+        </div>
+
+        <!-- Slide 8: Coding Streak -->
+        <div class="slide slide-stat" id="slide-8">
+          <div class="slide-content">
+            <p class="stat-label">Longest Streak</p>
+            <h2 class="stat-value" id="stat-streak">0</h2>
+            <p class="stat-unit">days in a row</p>
+            <p class="stat-subtitle" id="stat-streak-subtitle">Unstoppable!</p>
+          </div>
+        </div>
+
+        <!-- Slide 9: Busiest Month + Weekday vs Weekend -->
+        <div class="slide slide-busiest" id="slide-9">
+          <div class="slide-content">
+            <h3 class="slide-section-title">Your Peak Month</h3>
+            <div class="busiest-card" id="busiest-card"></div>
+            <div class="weekday-card" id="weekday-card" style="margin-top: 30px;"></div>
+          </div>
+        </div>
+
+        <!-- Slide 10: Polyglot Score -->
+        <div class="slide slide-stat" id="slide-10">
+          <div class="slide-content">
+            <p class="stat-label">Polyglot Score</p>
+            <h2 class="stat-value" id="stat-polyglot">0</h2>
+            <p class="stat-unit" id="stat-polyglot-label">languages used</p>
+            <p class="stat-subtitle" id="stat-polyglot-subtitle">Jack of all trades!</p>
+          </div>
+        </div>
+
+        <!-- Slide 11: Final Card (merged with outro) -->
+        <div class="slide slide-final-card" id="slide-11">
+          <div class="slide-content">
+            <div id="final-card" class="final-card"></div>
+            <button id="download-wrapped-btn" class="download-btn">Download PNG</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <div class="slides-nav">
+        <button id="prev-slide" class="nav-btn">←</button>
+        <div class="slides-indicators" id="slides-indicators"></div>
+        <button id="next-slide" class="nav-btn">→</button>
+      </div>
+    </div>
+  </div>
+
+    <script src="main.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</body>
+</html>
